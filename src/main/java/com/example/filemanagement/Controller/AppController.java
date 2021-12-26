@@ -1,10 +1,11 @@
 package com.example.filemanagement.Controller;
 
 import com.example.filemanagement.Model.Document;
+import com.example.filemanagement.Model.Setting;
 import com.example.filemanagement.Services.AppServices;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,9 +19,9 @@ public class AppController {
     }
 
     @GetMapping(path = "/")
-    public ResponseEntity<?> getAllFile() {
+    public ResponseEntity<?> getAllFile(Pageable pageable) {
         try {
-            return new ResponseEntity<>(appServices.getAllFile(), HttpStatus.OK);
+            return new ResponseEntity<>(appServices.getAllFile(pageable), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -29,18 +30,34 @@ public class AppController {
     @PostMapping(path = "/upload")
     public ResponseEntity<?> uploadFile(@RequestBody Document document) {
         try {
-            appServices.uploadFile(document);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(appServices.uploadFile(document), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping(path = "/delete")
-    public ResponseEntity<?> deleteFile(@RequestBody Document document) {
+    @PutMapping(path = "/delete/{id}")
+    public ResponseEntity<?> deleteFile(@PathVariable  int id) {
         try {
-            appServices.deleteFile(document);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(appServices.deleteFile(id), HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(path = "/download/{id}")
+    public ResponseEntity<?> downloadFile(@PathVariable int id) {
+        try {
+            return new ResponseEntity<>(appServices.downloadFile(id), HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(path = "/setting")
+    public ResponseEntity<?> changeSetting(@RequestBody Setting setting) {
+        try {
+            return new ResponseEntity<>(appServices.changeSetting(setting), HttpStatus.OK);
         } catch(Exception e){
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }

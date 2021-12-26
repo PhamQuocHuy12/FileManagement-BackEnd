@@ -13,20 +13,21 @@ public class Document {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false)
     private String path;
 
+    @Column(nullable = false)
     private int size;
 
-    @Column(length = 50)
+    @Column( nullable = false)
     private String mime;
 
-    @Column(name = "number_of_download")
+    @Column(name = "number_of_download", columnDefinition = "integer default 0")
     private int numberOfDownLoad;
 
     private int version;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String status;
 
     @Column(name = "created_date_time")
@@ -41,6 +42,14 @@ public class Document {
         this.version = version;
         this.status = status;
         this.createdDateTime = createdDateTime;
+    }
+
+    public Document(String name, String path, int size, String mime, String status) {
+        this.name = name;
+        this.path = path;
+        this.size = size;
+        this.mime = mime;
+        this.status = status;
     }
 
     public Document() {

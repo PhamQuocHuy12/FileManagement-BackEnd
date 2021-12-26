@@ -1,43 +1,53 @@
 package com.example.filemanagement.Services;
 
 import com.example.filemanagement.Model.Document;
+import com.example.filemanagement.Model.Setting;
 import com.example.filemanagement.Repository.DocumentRepository;
+import com.example.filemanagement.Repository.SettingRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 
+import java.util.Date;
 
 @Service
 public class AppServices {
     private final DocumentRepository documentRepository;
+    private final SettingRepository settingRepository;
 
-    public AppServices(DocumentRepository documentRepository) {
+    public AppServices(DocumentRepository documentRepository, SettingRepository settingRepository) {
         this.documentRepository = documentRepository;
+        this.settingRepository = settingRepository;
     }
 
-    public List<Document> getAllFile () {
-        return  documentRepository.findAll();
+    public Page<Document> getAllFile (Pageable pageable) {
+        return  documentRepository.findAllByStatusOrderByCreatedDateTimeDesc("available", pageable);
     }
 
     public Document uploadFile(Document document) {
-        return documentRepository.save(document);
+        document.setCreatedDateTime(new Date());
+        document.setVersion(documentRepository.countByName(document.getName())+1);
+        documentRepository.save(document);
+        return document;
     }
-    public Document deleteFile(Document document) {
+    public Document deleteFile(int id) {
+        Document document = documentRepository.findById(id);
         document.setStatus("unavailable");
-        return documentRepository.save(document);
+        documentRepository.save(document);
+        return document;
+    }
+
+    public Document downloadFile(int id) {
+        Document document = documentRepository.findById(id);
+        int i = document.getNumberOfDownLoad() + 1;
+        document.setNumberOfDownLoad(i);
+        documentRepository.save(document);
+        return document;
+    }
+
+    public Setting changeSetting(Setting setting) {
+        setting.setLastUpdateTime(new Date());
+        settingRepository.save(setting);
+        return setting;
     }
 }
-
-
-
-
-
-//        List<Document> demoData =  new ArrayList<>();
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        Date date = new Date();
-//        Document doc1 = new Document(1, "hehe", "C://Document", 5, "jpg", 0,1, "available", date );
-//        Document doc2 = new Document(2, "hehe", "C://Document", 5, "jpg", 0,2, "available", date );
-//        Document doc3 = new Document(3, "this is not hehe", "C://Document//heehee", 4, "jpg", 5,1, "available", date );
-//        documentRepository.save(doc1);
-//        documentRepository.save(doc2);
-//        documentRepository.save(doc3);

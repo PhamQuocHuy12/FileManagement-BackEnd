@@ -13,9 +13,9 @@ public class Setting {
     private int maxSize;
     @Column(name="item_per_page", nullable = false)
     private int itemPerPage;
-    @Column(name="mime_type_allow",length = 20, nullable = false)
+    @Column(name="mime_type_allow", nullable = false)
     private String mimeTypeAllowed;
-    @Column(name="last_update_time", nullable = false)
+    @Column(name="last_update_time")
     private Date lastUpdateTime;
 
     public Setting(int id, int maxSize, int itemPerPage, String mimeTypeAllowed, Date lastUpdateTime) {
@@ -28,6 +28,12 @@ public class Setting {
 
     public Setting() {
 
+    }
+
+    public Setting(int maxSize, int itemPerPage, String mimeTypeAllowed) {
+        this.maxSize = maxSize;
+        this.itemPerPage = itemPerPage;
+        this.mimeTypeAllowed = mimeTypeAllowed;
     }
 
     public int getId() {
