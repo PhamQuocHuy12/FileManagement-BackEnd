@@ -50,4 +50,9 @@ public class AppServices {
         settingRepository.save(setting);
         return setting;
     }
+
+    public Setting getSetting() {
+        return settingRepository.findTopByOrderByIdDesc();
+    }
+
 }

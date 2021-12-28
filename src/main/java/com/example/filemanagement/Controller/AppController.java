@@ -62,4 +62,13 @@ public class AppController {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(path = "/setting")
+    public ResponseEntity<?> getSetting() {
+        try {
+            return new ResponseEntity<>(appServices.getSetting(), HttpStatus.OK);
+        } catch(Exception e){
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
